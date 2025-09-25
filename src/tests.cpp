@@ -3,7 +3,7 @@
 // 练习1，实现库函数strlen
 int my_strlen(char *str) {
     /**
-     * 统计字符串的长度，太简单了。
+     * 统计字符串的长度。
      */
 
     // IMPLEMENT YOUR CODE HERE
