@@ -5,9 +5,12 @@ int my_strlen(char *str) {
     /**
      * 统计字符串的长度。
      */
-
-    // IMPLEMENT YOUR CODE HERE
-    return 0;
+    int count = 0;
+    while (*str != '\0') {
+          count++;
+          str++;
+        }
+    return count;
 }
 
 
@@ -17,8 +20,13 @@ void my_strcat(char *str_1, char *str_2) {
      * 将字符串str_2拼接到str_1之后，我们保证str_1指向的内存空间足够用于添加str_2。
      * 注意结束符'\0'的处理。
      */
-
-    // IMPLEMENT YOUR CODE HERE
+    while(*str_1 != '\0')str_1++;
+    while(*str_2 != '\0'){
+         *str_1 = *str_2;
+         str_1++;
+         str_2++;
+    }
+   *(++str_1)='\0';
 }
 
 
@@ -29,8 +37,16 @@ char* my_strstr(char *s, char *p) {
      * 例如：
      * s = "123456", p = "34"，应该返回指向字符'3'的指针。
      */
-
-    // IMPLEMENT YOUR CODE HERE
+    if (*p == '\0') return s;
+    for (char *start = s; *start != '\0'; start++) {
+        char *s_ptr = start;
+        char *p_ptr = p;
+        while (*p_ptr != '\0' && *s_ptr == *p_ptr) {
+            s_ptr++;
+            p_ptr++;
+        }
+        if (*p_ptr == '\0') return start;
+    }
     return 0;
 }
 
@@ -94,7 +110,12 @@ void rgb2gray(float *in, float *out, int h, int w) {
      * (1) for循环的使用。
      * (2) 内存的访问。
      */
-
+    for (int i=1;i<=h;i++){
+        for (int j=1;j<=w;j++){
+            *out = *in * 0.2989 + *(++in) * 0.5870 + *(++in) * 0.1140 ;
+            in++;out++;
+        }
+    }
     // IMPLEMENT YOUR CODE HERE
     // ...
 }
@@ -197,7 +218,17 @@ void resize(float *in, float *out, int h, int w, int c, float scale) {
      */
 
     int new_h = h * scale, new_w = w * scale;
-    // IMPLEMENT YOUR CODE HERE
+    for(int i=0;i<=new_h-1;i++){
+        for(int j=0;j<=new_w-1;j++){
+            int x0 = (i) / scale;
+            int y0 = (j) / scale;
+            float dx = (i - x0 * scale) / scale;
+            float dy = (i - y0 * scale) / scale;
+            if (x0 < h and y0 < w)*out = *(in + h * i + j) * (1 - dx) * (1 - dy) + *(in + h * i + j + 1) * dx * (1 - dy) + *(in + h * (i + 1) + j) * (1 - dx) * dy + *(in + h * (i + 1) + j + 1) * dx * dy;
+               else *out =  *(in + h * i + j) * (1 - dx) * (1 - dy) + *(in + h * i + j - 1) * dx * (1 - dy) + *(in + h * (i - 1) + j) * (1 - dx) * dy + *(in + h * (i - 1) + j - 1) * dx * dy;
+            out++;
+        }
+    }
 
 }
 
@@ -219,6 +250,13 @@ void hist_eq(float *in, int h, int w) {
      * (2) 灰度级个数为256，也就是{0, 1, 2, 3, ..., 255}
      * (3) 使用数组来实现灰度级 => 灰度级的映射
      */
-
-    // IMPLEMENT YOUR CODE HERE
+    int st[256] = {0};
+    int tl = h * w;
+    for (int i = 0; i < tl; i++) st[(int)in[i]]++;
+    int sum = 0,ch[256];
+    for (int i = 0; i < 256; i++) {
+        sum += st[i];
+        ch[i] = (int)((255.0 * sum / tl) + 0.5);
+    }
+    for (int i = 0; i < tl; i++) in[i] = (float)ch[(int)in[i]]; 
 }
